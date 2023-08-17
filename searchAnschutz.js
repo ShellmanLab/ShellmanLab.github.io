@@ -1,9 +1,9 @@
 localStorage.setItem("counter", "24");
 
 function findAndScoreMotifs() {
-  var result = "Canonical TBMs: R-x-x-x-x-G-(No Proline)-x: \<br>";
+  var result = "<b>Canonical TBMs: R-x-x-x-x-G-(No Proline)-x: \<br></b>";
   result += findMotifs();
-  result += "\<br> \<br> Extended TBMs with 5, 6, or 7 amino acids between R and G: \<br>";
+  result += "\<br> \<br> <b>Extended TBMs with 5, 6, or 7 amino acids between R and G: </b> \<br>";
   result += extendedSearch();
   document.getElementById("canonical").innerHTML = result;
 }
@@ -50,7 +50,7 @@ function extendedSearch(){
   proteins = modify(seq)
 
 
-  var motifs = 'Motif, &emsp; Position &emsp; Score\<br>'
+  var motifs = '<b>Motif, &emsp; Position, &emsp; Score\<br></b>'
 
   for (var i = 0, _pj_a = proteins.length-6; i < _pj_a; i += 1) {
 
@@ -149,7 +149,7 @@ function modify(seq) {
 // find and score main motifs -- canonical
 function search(proteins) {
   //var motifs = ''
-  var motifs = 'Motif, &emsp; Position, &emsp; Score \<br>'
+  var motifs = '<b>Motif, &emsp; Position, &emsp; Score \<br></b>'
   // var scores = []
   // var key_value = [];
   //key_value = {};

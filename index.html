@@ -3,12 +3,14 @@
 <head>
     <link rel="stylesheet" href="styles.css">
     <script src="searchAnschutz.js"></script>
+    <img src="anschutz.png" alt="logo" class="logo">
 </head>
 <body>
-
-
+    <div class="buffer"></div>
 
 <h1>Tankyrase Binding Motif (TBM) Search Project</h1>
+
+
 <h3>Input single-letter amino acid sequence below:</h3>
 
 <!--
@@ -20,22 +22,36 @@
     times!
 </h3>
 -->
+<div class="container">
+    <div class="column"> <!--Put this stuff in left column so we can have tips on the right side of it-->
 
 <textarea id="proteins" name="proteins" rows="6" cols="100"></textarea> <br> <br>
 <button type="submit" onclick="findAndScoreMotifs()">Find and Score Motifs!</button>
+<img src="infoBub.png" class="info">
 
 <!-- OLD SEPARATED SCORING BUTTONS
 <button type="submit" onclick="findMotifs()">Find Canonical Motifs</button> <br> <br>
 <button type="submit" onclick="extendedSearch()">Find Extended Motifs</button> <br> <br>
 -->
-
-<button type="submit" onclick="scoreMotifs()">Score any 8-amino-acid sequence</button> <br> <br>
+<br> <br>
+<button type="submit" onclick="scoreMotifs()">Score any 8-amino-acid sequence</button> 
+<img src="infoBub.png" class="info">
+<br> <br> 
 <button type="submit" onclick="clearText()">Clear</button>
 
 <p id="notice"><em>Note: Scores are a predication and do not replace experimental data.</em></p>
+<br><br>
 <p id="canonical"></p>
 
 <br> <br>
+
+    </div>
+    <div class="column">
+        <textarea id="tipsTricks" rows="6" cols="30" readonly>Tips and tricks will go here.</textarea>
+        <br> <br>
+        <textarea id="tipsTricks" rows="6" cols="30" readonly>Helpful links will go here.</textarea>
+    </div>
+</div>
 
 
 <!--

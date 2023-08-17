@@ -1,9 +1,39 @@
-body {
-    background-color: white;
+  body {
+    background-color: whitesmoke;
+    margin-left: 30px;
+    font: comic;
   }
   h1 {
     color: black;
+    font: comic;
   }
   p {
     color: black;
+    font: helvetica;
+  }
+
+  .logo {
+    width: 600px;
+    height: auto;
+    float: right
+  }
+
+  .info {
+    width: 20px;
+    height: auto;
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+    grid-gap: 100px; /* Gap between columns */
+  }
+
+  .buffer {
+    height: 30px;
+  }
+
+  .outlined-text {
+    -webkit-text-stroke: 2px black; /* Webkit browsers */
+
   }

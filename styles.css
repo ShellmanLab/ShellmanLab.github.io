@@ -37,3 +37,43 @@
     -webkit-text-stroke: 2px black; /* Webkit browsers */
 
   }
+
+  .info-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .info-bubble-1 {
+    display: none;
+    position: absolute;
+    background-color: #CFB87C;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 320px;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .info-bubble-2 {
+    display: none;
+    position: absolute;
+    background-color: #CFB87C;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .info-container:hover .info-bubble-1 {
+    display: block;
+  }
+
+  .info-container:hover .info-bubble-2 {
+    display: block;
+  }

@@ -27,7 +27,13 @@
 
 <textarea id="proteins" name="proteins" rows="6" cols="100"></textarea> <br> <br>
 <button type="submit" onclick="findAndScoreMotifs()">Find and Score Motifs!</button>
-<img src="infoBub.png" class="info">
+<div class="info-container">
+    <img src="infoBub.png" class="info">
+    <div class="info-bubble-1">
+        Canonical TBMs: (R-x-x-x-x-G-(No proline)-x)
+        Extended TBMs: (R-x-x-x-D/E-G-x-x), with 5, 6, or 7 amino acids between R and G
+    </div>
+  </div>
 
 <!-- OLD SEPARATED SCORING BUTTONS
 <button type="submit" onclick="findMotifs()">Find Canonical Motifs</button> <br> <br>
@@ -35,7 +41,13 @@
 -->
 <br> <br>
 <button type="submit" onclick="scoreMotifs()">Score any 8-amino-acid sequence</button> 
-<img src="infoBub.png" class="info">
+<div class="info-container">
+    <img src="infoBub.png" class="info">
+    <div class="info-bubble-2">
+        Score any 8-residue peptide sequence regardless of the presence of R1/G6, using canonical score system.
+    </div>
+  </div>
+
 <br> <br> 
 <button type="submit" onclick="clearText()">Clear</button>
 
@@ -65,6 +77,9 @@
 -->
 
 <br> <br> <br> <br>
+
+
+
 
 </body>
 </html>

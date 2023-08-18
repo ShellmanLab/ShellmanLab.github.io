@@ -26,7 +26,7 @@
   .container {
     display: grid;
     grid-template-columns: 1fr 1fr; /* Two equal-width columns */
-    grid-gap: 100px; /* Gap between columns */
+    grid-gap: 80px; /* Gap between columns */
   }
 
   .buffer {

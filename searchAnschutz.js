@@ -16,7 +16,10 @@ function findMotifs() {
   var sequence = document.getElementById("proteins").value;
   cleanedSeq = modify(sequence)
   results = search(cleanedSeq)
-  //document.getElementById("canonical").innerHTML = results;
+  if (results.length < 49){
+    //results += results.length;
+    results += "No motifs found.";
+  }
   return results;
 }
 
@@ -94,6 +97,12 @@ function extendedSearch(){
   };
 
   //document.getElementById("canonical").innerHTML = motifs;
+
+  if (motifs.length < 48){
+    //motifs += motifs.length;
+    motifs += "No motifs found.";
+  }
+
   return motifs;
 
 }

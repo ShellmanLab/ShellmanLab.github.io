@@ -228,7 +228,8 @@ function findAndScoreMotifs() {
    // get user input
   var uniprotProteinIDList = document.getElementById("proteins").value;
   // translate to an array by splitting on commas and trimming any extra white space
-  var uniprotProteinIDArray = uniprotProteinIDList.split(',').map(item => item.trim());
+  var uniprotProteinIDArray = uniprotProteinIDList.split(',')
+  uniprotProteinIDArray = uniprotProteinIDArray.filter(value => value.trim() !== '');
 
     //set-up output
     var resultCanonical = "<b>Canonical TBMs: R-x-x-x-x-G-(No Proline)-x: \<br></b>";

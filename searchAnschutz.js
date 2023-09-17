@@ -15,11 +15,10 @@ function findMotifs(uniprotProteinIDArray) {
 
         //use sequence in search
         proteinResult = search(proteinInfo.proteinSequence, proteinInfo.proteinName, proteinInfo.proteinAccession);
-        console.log("Protein Result:", proteinResult);
+//        console.log("Protein Result:", proteinResult);
         if (proteinResult.length < 0){
             proteinResult += "No motifs found.";
         }
-        console.log('Results:', proteinResult);
         return proteinResult;
     })
     .catch(error => {
@@ -32,7 +31,6 @@ function findMotifs(uniprotProteinIDArray) {
     .then(proteinResults => {
       // Concatenate all results into a single string
       var resultCanonical = proteinResults.join('');
-//      console.log('Results HERE:', resultCanonical);
       return resultCanonical;
     })
     .catch(error => {
@@ -77,11 +75,11 @@ function findExtendedMotifs(uniprotProteinIDArray) {
   var promises = [];
   // get the canonical motif
   // iterate through the sequences
-  for(var i = 0; i < uniprotProteinIDArray.length; i++){
-    var uniprotProteinID = uniprotProteinIDArray[i];
+  for(var k = 0; k < uniprotProteinIDArray.length; k++){
+    var uniprotProteinID = uniprotProteinIDArray[k];
     var promise = getAminoAcidSequence(uniprotProteinID)
     .then(proteinInfo => {
-
+        motifs = '';
       for (var i = 0, _pj_a = proteinInfo.proteinSequence.length-6; i < _pj_a; i += 1) {
         if (proteinInfo.proteinSequence[i] == 'R' && proteinInfo.proteinSequence[i+8] == 'G'){
           thisMotif = proteinInfo.proteinSequence.substring(i, i+11);
@@ -103,11 +101,10 @@ function findExtendedMotifs(uniprotProteinIDArray) {
         };
       };
 
-      if (motifs.length < 48){
+      if (motifs.length < 0){
         motifs += "No motifs found.";
       }
-        console.log('Results:', proteinResult);
-        return proteinResult;
+        return motifs;
     })
     .catch(error => {
         console.error('Error:', error);
@@ -116,10 +113,9 @@ function findExtendedMotifs(uniprotProteinIDArray) {
   }
     // Wait for all promises to resolve
     return Promise.all(promises)
-    .then(proteinResults => {
+    .then(proteinExtendedResults => {
       // Concatenate all results into a single string
-      var resultExtended = proteinResults.join('');
-      console.log('Results HERE:', resultExtended);
+      var resultExtended = proteinExtendedResults.join('');
       return resultExtended;
     })
     .catch(error => {
@@ -151,53 +147,6 @@ function clearText2() {
   document.getElementById("8proteins").value = '';
 }
 
-// called when extended search button is clicked
-function extendedSearch(){
-  seq = document.getElementById("proteins").value
-  proteins = modify(seq)
-  var motifs = '<b>Motif, &emsp; Position, &emsp; Score\<br></b>'
-
-  for (var i = 0, _pj_a = proteins.length-6; i < _pj_a; i += 1) {
-    if (proteins[i] == 'R' && proteins[i+8] == 'G'){
-      thisMotif = proteins.substring(i, i+11);
-      score = extendedScoring(thisMotif)
-      realIndex = i + 1
-      motifs = motifs + thisMotif + ', &emsp;' + realIndex + ', &emsp;' + score + '\<br>';
-
-    }
-    else if (proteins[i] == 'R' && proteins[i+7] == 'G'){
-      thisMotif = proteins.substring(i, i+10);
-      score = extendedScoring(thisMotif)
-      realIndex = i + 1
-      motifs = motifs + thisMotif + ', &emsp;' + realIndex + ', &emsp;' + score + '\<br>';
-    }
-
-    else if (proteins[i] == 'R' && proteins[i+6] == 'G'){
-      thisMotif = proteins.substring(i, i+9);
-      score = extendedScoring(thisMotif)
-      realIndex = i + 1
-      motifs = motifs + thisMotif + ', &emsp;' + realIndex + ', &emsp;' + score + '\<br>';
-    };
-  };
-
-  //document.getElementById("canonical").innerHTML = motifs;
-
-  if (motifs.length < 48){
-    //motifs += motifs.length;
-    motifs += "No motifs found.";
-  }
-
-  return motifs;
-
-}
-
-
-function alternateScoring(thisMotif) {
-   var totalScore = 0;
-
-  return totalScore;
-}
-
 // clears extended search output
 function clearText3() {
   document.getElementById("extended").value = '';
@@ -218,7 +167,6 @@ function modify(seq) {
     return new_seq;
 }
 
-
 function getScore(thisMotif){
 
   // score initialized to 0
@@ -235,10 +183,10 @@ function getScore(thisMotif){
     // calculate position score based off current position (i) and currentChar at position
     positionScore = scoreSheet[i.toString()][currentChar];
     thisScore += positionScore;
-    console.log(currentChar, positionScore, thisScore)
+//    console.log(currentChar, positionScore, thisScore)
   }
 
-  console.log(thisScore);
+//  console.log(thisScore);
 
   return thisScore;
 }
@@ -292,13 +240,13 @@ function findAndScoreMotifs() {
 //   get results
     Promise.all([
         findMotifs(uniprotProteinIDArray),
-        findMotifs(uniprotProteinIDArray) //TODO: This should be changed to findExtendedMotifs once it is working
+        findExtendedMotifs(uniprotProteinIDArray) //TODO: This should be changed to findExtendedMotifs once it is working
         ]).then(([canonicalResult, extendedResult]) => {
         // Append the resolved result to resultCanonical here
         resultCanonical += canonicalResult;
         resultExtended += extendedResult;
         // Now you can work with the updated resultCanonical
-//        console.log('Updated Result:', resultCanonical);
+//        console.log('Extended Result:', extendedResult);
 
         var resultFinal = resultCanonical + resultExtended;
         document.getElementById("canonical").innerHTML = resultFinal;
@@ -327,13 +275,15 @@ function extendedScoring(input){
         const currentChar = input.charAt(gIndex + offset);
 
         totalScore += scoreSheet[offset.toString()][currentChar];
-        console.log(scoreSheet[offset.toString()][currentChar]);
+//        console.log(scoreSheet[offset.toString()][currentChar]);
         offset += 1;
     }
 
     return totalScore;
 }
 
+
+// This code here served as good testing for a single protein.
 var motifs = '';
 var thisMotif = '';
 const uniprotProteinID = 'P78314';
@@ -342,26 +292,25 @@ const proteinSequence = 'MAAEEMHWPVPMKAIGAQNLLTMPGGVAKAGYLHKKGGTQLQLLKWPLRFVIIHK
 for (var i = 0, _pj_a = proteinSequence.length-6; i < _pj_a; i += 1) {
     if (proteinSequence[i] == 'R' && proteinSequence[i+8] == 'G'){
       const thisMotif = proteinSequence.substring(i, i+11);
-      console.log("Uniprot Name:", thisMotif);
       var score = extendedScoring(thisMotif);
       realIndex = i + 1;
-      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',' + score + '\<br>';
+      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',score:' + score + '\<br>';
     }
-//            else if (proteinSequence[i] == 'R' && proteinSequence[i+7] == 'G'){
-//              thisMotif = proteinSequence.substring(i, i+10);
-//              score = 1; //extendedScoring(thisMotif);
-//              realIndex = i + 1;
-//              motifs = motifs + proteinInfo.proteinName + ','+ proteinInfo.proteinAccession + ',' + thisMotif + ',' + realIndex + ',' + score + '\<br>';
-//            }
-//            else if (proteinInfo.proteinSequence[i] == 'R' && proteinInfo.proteinSequence[i+6] == 'G'){
-//              thisMotif = proteinInfo.proteinSequence.substring(i, i+9);
-//              score = 1;//extendedScoring(thisMotif);
-//              realIndex = i + 1;
-//              motifs = motifs + proteinInfo.proteinName + ','+ proteinInfo.proteinAccession + ',' + thisMotif + ',' + realIndex + ',' + score + '\<br>';
-//            };
+    else if (proteinSequence[i] == 'R' && proteinSequence[i+7] == 'G'){
+      thisMotif = proteinSequence.substring(i, i+10);
+      score = extendedScoring(thisMotif);
+      realIndex = i + 1;
+      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',score:' + score + '\<br>';
+    }
+    else if (proteinSequence[i] == 'R' && proteinSequence[i+6] == 'G'){
+      thisMotif = proteinSequence.substring(i, i+9);
+      score = extendedScoring(thisMotif);
+      realIndex = i + 1;
+      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',score:' + score + '\<br>';
+    };
 };
 
 if (motifs.length < 48){
 motifs += "No motifs found.";
 }
-console.log('Extended Results:', motifs);
+//console.log('Extended Results:', motifs);

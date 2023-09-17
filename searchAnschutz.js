@@ -70,7 +70,6 @@ function findExtendedMotifs(uniprotProteinIDArray) {
 }
 
 // Finds the extended motifs for the input list of Uniprot Codes
-// TODO: This is NOT Working
 function findExtendedMotifs(uniprotProteinIDArray) {
   var promises = [];
   // get the canonical motif
@@ -200,7 +199,8 @@ function getAminoAcidSequence(uniprotProteinID) {
         fetch(`${apiUrl}/${uniprotProteinID}`)
           .then(response => {
             if (!response.ok) {
-              throw new Error('Network response was not ok');
+              document.getElementById("canonical").innerHTML = "Unable to fetch amino acid sequence for Uniprot code '" + uniprotProteinID + "'. Check that the code is correct and try again.";
+              throw new Error('Unable to fetch amino acid sequence.');
             }
             return response.json(); // Parse the JSON response
           })
@@ -240,7 +240,7 @@ function findAndScoreMotifs() {
 //   get results
     Promise.all([
         findMotifs(uniprotProteinIDArray),
-        findExtendedMotifs(uniprotProteinIDArray) //TODO: This should be changed to findExtendedMotifs once it is working
+        findExtendedMotifs(uniprotProteinIDArray)
         ]).then(([canonicalResult, extendedResult]) => {
         // Append the resolved result to resultCanonical here
         resultCanonical += canonicalResult;
@@ -283,7 +283,7 @@ function extendedScoring(input){
 }
 
 
-// This code here served as good testing for a single protein.
+// This code here served as good testing for a single protein extended scoring results.
 var motifs = '';
 var thisMotif = '';
 const uniprotProteinID = 'P78314';

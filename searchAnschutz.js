@@ -130,7 +130,7 @@ function clearText() {
 
 // called when score button is pressed
 function scoreMotifs(){
-  var mot = document.getElementById("proteins").value;
+  var mot = document.getElementById("8proteins").value;
   if (mot.length != 8){
     document.getElementById("canonical").innerHTML = "Error- sequence must be 8 characters long";
   }
@@ -142,7 +142,7 @@ function scoreMotifs(){
 
 // clears text and results from scoring text box
 function clearText2() {
-  document.getElementById("score").innerHTML = '';
+  document.getElementById("canonical").innerHTML = '';
   document.getElementById("8proteins").value = '';
 }
 

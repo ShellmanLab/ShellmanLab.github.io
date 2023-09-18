@@ -1,28 +1,127 @@
 localStorage.setItem("counter", "24");
 
-function findAndScoreMotifs() {
-  var result = "<b>Canonical TBMs: R-x-x-x-x-G-(No Proline)-x: \<br></b>";
-  result += findMotifs();
-  result += "\<br> \<br> <b>Extended TBMs with 5, 6, or 7 amino acids between R and G: </b> \<br>";
-  result += extendedSearch();
-  document.getElementById("canonical").innerHTML = result;
-}
 
+// Finds the canonical motifs for the input list of Uniprot Codes
+function findMotifs(uniprotProteinIDArray) {
+  var promises = [];
+  // get the canonical motif
+  // iterate through the sequences
+  for(var i = 0; i < uniprotProteinIDArray.length; i++){
+    var uniprotProteinID = uniprotProteinIDArray[i];
+    var promise = getAminoAcidSequence(uniprotProteinID)
+    .then(proteinInfo => {
+        //print Uniprot sequence
+        // console.log("Uniprot Sequence:", sequence);
 
-// called when "Find Canonical Motifs" on anschutz tab button is pressed 
-function findMotifs() {
-  //localStorage.setItem("counter", "26");
-  //console.log("26")
-  var sequence = document.getElementById("proteins").value;
-  cleanedSeq = modify(sequence)
-  results = search(cleanedSeq)
-  if (results.length < 49){
-    //results += results.length;
-    results += "No motifs found.";
+        //use sequence in search
+        proteinResult = search(proteinInfo.proteinSequence, proteinInfo.proteinName, proteinInfo.proteinAccession);
+//        console.log("Protein Result:", proteinResult);
+        if (proteinResult.length < 0){
+            proteinResult += "No motifs found.";
+        }
+        return proteinResult;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    promises.push(promise);
   }
-  return results;
+    // Wait for all promises to resolve
+    return Promise.all(promises)
+    .then(proteinResults => {
+      // Concatenate all results into a single string
+      var resultCanonical = proteinResults.join('');
+      return resultCanonical;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      return 'Error occurred while fetching motifs';
+    });
 }
 
+// find and score main motifs -- canonical
+function search(proteinSequence, proteinName, proteinAccession) {
+  var motifs = '';
+
+  for (var i = 0, _pj_a = proteinSequence.length-6; i < _pj_a; i += 1) {
+
+    // if a motif is found
+    if (proteinSequence[i] == 'R' && proteinSequence[i+5] == 'G' && proteinSequence[i+6] != 'P'){
+
+      thisMotif = proteinSequence.substring(i, i+8);
+      thisScore = getScore(thisMotif);
+
+      realIndex = i + 1
+
+      // Add motif to new line of table
+      motifs = motifs + proteinName + ',' + proteinAccession + ',' + thisMotif + ',' + realIndex + ',' + thisScore + '\<br>';
+    };
+  };
+  return motifs;
+}
+
+function findExtendedMotifs(uniprotProteinIDArray) {
+  return new Promise((resolve, reject) => {
+    // Simulate an asynchronous operation, replace with your actual code
+    setTimeout(() => {
+      resolve("Promise resolved successfully!"); // Resolve with a value
+    }, 1000); // Simulated delay
+  });
+}
+
+// Finds the extended motifs for the input list of Uniprot Codes
+function findExtendedMotifs(uniprotProteinIDArray) {
+  var promises = [];
+  // get the canonical motif
+  // iterate through the sequences
+  for(var k = 0; k < uniprotProteinIDArray.length; k++){
+    var uniprotProteinID = uniprotProteinIDArray[k];
+    var promise = getAminoAcidSequence(uniprotProteinID)
+    .then(proteinInfo => {
+        motifs = '';
+      for (var i = 0, _pj_a = proteinInfo.proteinSequence.length-6; i < _pj_a; i += 1) {
+        if (proteinInfo.proteinSequence[i] == 'R' && proteinInfo.proteinSequence[i+8] == 'G'){
+          thisMotif = proteinInfo.proteinSequence.substring(i, i+11);
+          score = extendedScoring(thisMotif)
+          realIndex = i + 1
+          motifs = motifs + proteinInfo.proteinName + ','+ proteinInfo.proteinAccession + ',' + thisMotif + ',' + realIndex + ',' + score + '\<br>';
+        }
+        else if (proteinInfo.proteinSequence[i] == 'R' && proteinInfo.proteinSequence[i+7] == 'G'){
+          thisMotif = proteinInfo.proteinSequence.substring(i, i+10);
+          score = extendedScoring(thisMotif)
+          realIndex = i + 1
+          motifs = motifs + proteinInfo.proteinName + ','+ proteinInfo.proteinAccession + ',' + thisMotif + ',' + realIndex + ',' + score + '\<br>';
+        }
+        else if (proteinInfo.proteinSequence[i] == 'R' && proteinInfo.proteinSequence[i+6] == 'G'){
+          thisMotif = proteinInfo.proteinSequence.substring(i, i+9);
+          score = extendedScoring(thisMotif)
+          realIndex = i + 1
+          motifs = motifs + proteinInfo.proteinName + ','+ proteinInfo.proteinAccession + ',' + thisMotif + ',' + realIndex + ',' + score + '\<br>';
+        };
+      };
+
+      if (motifs.length < 0){
+        motifs += "No motifs found.";
+      }
+        return motifs;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    promises.push(promise);
+  }
+    // Wait for all promises to resolve
+    return Promise.all(promises)
+    .then(proteinExtendedResults => {
+      // Concatenate all results into a single string
+      var resultExtended = proteinExtendedResults.join('');
+      return resultExtended;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      return 'Error occurred while fetching motifs';
+    });
+}
 // clears text and results from text box
 function clearText() {
   document.getElementById("canonical").innerHTML = '';
@@ -31,108 +130,20 @@ function clearText() {
 
 // called when score button is pressed
 function scoreMotifs(){
-  var mot = document.getElementById("proteins").value;
+  var mot = document.getElementById("8proteins").value;
   if (mot.length != 8){
     document.getElementById("canonical").innerHTML = "Error- sequence must be 8 characters long";
   }
   else{
     document.getElementById("canonical").innerHTML = mot + ' -> score of ' + getScore(mot);
   }
-  
+
 }
 
 // clears text and results from scoring text box
 function clearText2() {
-  document.getElementById("score").innerHTML = '';
+  document.getElementById("canonical").innerHTML = '';
   document.getElementById("8proteins").value = '';
-}
-
-// called when extended search button is clicked
-function extendedSearch(){
-  seq = document.getElementById("proteins").value
-  proteins = modify(seq)
-
-
-  var motifs = '<b>Motif, &emsp; Position, &emsp; Score\<br></b>'
-
-  for (var i = 0, _pj_a = proteins.length-6; i < _pj_a; i += 1) {
-
-    if (proteins[i] == 'R' && proteins[i+8] == 'G'){
-
-      thisMotif = proteins.substring(i, i+11);
-      
-      score = extendedScoring(thisMotif)
-
-      realIndex = i + 1
-      
-      motifs = motifs + thisMotif + ', &emsp;' + realIndex + ', &emsp;' + score + '\<br>';
-
-    }
-
-    else if (proteins[i] == 'R' && proteins[i+7] == 'G'){
-
-      thisMotif = proteins.substring(i, i+10);
-
-      score = extendedScoring(thisMotif)
-
-      realIndex = i + 1
-      
-      motifs = motifs + thisMotif + ', &emsp;' + realIndex + ', &emsp;' + score + '\<br>';
-
-    }
-
-    else if (proteins[i] == 'R' && proteins[i+6] == 'G'){
-
-      thisMotif = proteins.substring(i, i+9);
-
-      score = extendedScoring(thisMotif)
-
-      realIndex = i + 1
-      
-      motifs = motifs + thisMotif + ', &emsp;' + realIndex + ', &emsp;' + score + '\<br>';
-
-    };
-    
-
-  };
-
-  //document.getElementById("canonical").innerHTML = motifs;
-
-  if (motifs.length < 48){
-    //motifs += motifs.length;
-    motifs += "No motifs found.";
-  }
-
-  return motifs;
-
-}
-
-// extended scoring function
-function extendedScoring(sequence) {
-
-  const myJSON = '{"-2":{"P":0.0510192837,"G":0.187107438,"A":0.0246831956,"V":-0.1377410468,"L":-0.1377410468,"I":-0.1377410468,"M":-0.1377410468,"C":0.0126721763,"S":-0.1377410468,"T":-0.1377410468,"R":-0.1377410468,"K":-0.1377410468,"H":-0.1377410468,"D":-0.1377410468,"E":-0.1377410468,"N":-0.1377410468,"Q":-0.1377410468,"W":-0.1377410468,"F":-0.1377410468,"Y":-0.1377410468},"-1":{"P":-0.1377410468,"G":-0.1377410468,"A":-0.1377410468,"V":0.0190082645,"L":-0.1377410468,"I":0.0104683196,"M":-0.1377410468,"C":0.0099449036,"S":-0.1377410468,"T":-0.1377410468,"R":-0.1377410468,"K":-0.1377410468,"H":-0.1377410468,"D":0.1720661157,"E":0.0344077135,"N":-0.1377410468,"Q":0.0163085399,"W":-0.1377410468,"F":-0.1377410468,"Y":0.0132782369},"0":{"P":-0.1377410468,"G":0.2754820937,"A":-0.1377410468,"V":-0.1377410468,"L":-0.1377410468,"I":-0.1377410468,"M":-0.1377410468,"C":-0.1377410468,"S":-0.1377410468,"T":-0.1377410468,"R":-0.1377410468,"K":-0.1377410468,"H":-0.1377410468,"D":-0.1377410468,"E":-0.1377410468,"N":-0.1377410468,"Q":-0.1377410468,"W":-0.1377410468,"F":-0.1377410468,"Y":-0.1377410468},"1":{"P":-0.1377410468,"G":0.0087603306,"A":0.019862259,"V":0.0084022039,"L":0.005922865,"I":0.0110192837,"M":0.0143801653,"C":0.0298071625,"S":0.016446281,"T":0.0151239669,"R":0.008292011,"K":0.0084848485,"H":0.0133333333,"D":0.0224793388,"E":0.0324517906,"N":0.014600551,"Q":0.0210192837,"W":0.0081267218,"F":0.0093939394,"Y":0.0075482094},"2":{"P":0.012892562,"G":0.0087603306,"A":0.0185674931,"V":0.0103030303,"L":0.0070247934,"I":0.0080165289,"M":0.0092837466,"C":0.0132506887,"S":0.0132506887,"T":0.008292011,"R":0.0028099174,"K":0.0024793388,"H":0.0085950413,"D":0.0515702479,"E":0.0580165289,"N":0.0125344353,"Q":0.0071349862,"W":0.0050413223,"F":0.0074931129,"Y":0.0100826446}}'
-  const scoreSheet = JSON.parse(myJSON);
-  var gIndex = 0;
-
-  for (var i = 6, _pj_a = 9; i < _pj_a; i += 1){
-    if (sequence[i] == 'G'){
-      gIndex = i;
-    }
-  }
-
-  totalScore = 0;
-  var offset = -2;
-
-  while (offset < 3){
-    currentChar = thisMotif.charAt(gIndex + offset);
-    
-    totalScore += scoreSheet[offset.toString()][currentChar];
-    console.log(scoreSheet[offset.toString()][currentChar]);
-    offset += 1;
-  }
-
-
-  return totalScore;
 }
 
 // clears extended search output
@@ -145,64 +156,18 @@ function clearText3() {
 function modify(seq) {
     var new_seq;
     new_seq = "";
-  
+
     for (var i = 0, _pj_a = seq.length; i < _pj_a; i += 1) {
       if (seq[i] !== "\n") {
         new_seq = new_seq + seq[i];
       }
     }
-  
+
     return new_seq;
 }
 
-// find and score main motifs -- canonical
-function search(proteins) {
-  //var motifs = ''
-  var motifs = '<b>Motif, &emsp; Position, &emsp; Score \<br></b>'
-  // var scores = []
-  // var key_value = [];
-  //key_value = {};
-
-  console.log(proteins)
-
-  for (var i = 0, _pj_a = proteins.length-6; i < _pj_a; i += 1) {
-
-    // if a motif is found
-    if (proteins[i] == 'R' && proteins[i+5] == 'G' && proteins[i+6] != 'P'){
-
-      thisMotif = proteins.substring(i, i+8);
-      thisScore = getScore(thisMotif); 
-
-      realIndex = i + 1
-      
-      motifs = motifs + thisMotif + ', &emsp;' + realIndex + ', &emsp; ' + thisScore + '\<br>';
-
-      
-      //var cont = true;
-      //while (cont == true){
-      //  for (let i=0; i<key_value.length; i++){
-      //    if (key_value[i][1] < thisScore){
-      //      cont = false;
-      //    };
-      //  };
-      //  cont = false;
-      //};
-
-      //key_value.splice(0,0,[thisMotif, thisScore]);
-      
-      
-    };
-  };
-
-  //console.log(key_value);
-  //key_value.sort()
-
-  return motifs;
-};
-
-
 function getScore(thisMotif){
-  
+
   // score initialized to 0
   thisScore = 0;
 
@@ -217,10 +182,136 @@ function getScore(thisMotif){
     // calculate position score based off current position (i) and currentChar at position
     positionScore = scoreSheet[i.toString()][currentChar];
     thisScore += positionScore;
-    console.log(currentChar, positionScore, thisScore)
+//    console.log(currentChar, positionScore, thisScore)
   }
 
-  console.log(thisScore);
+//  console.log(thisScore);
 
   return thisScore;
 }
+
+function getAminoAcidSequence(uniprotProteinID) {
+    // Define the UniProt API endpoint
+    const apiUrl = 'https://rest.uniprot.org/uniprotkb';
+
+    return new Promise((resolve, reject) => {
+        // Make a GET request to the UniProt API
+        fetch(`${apiUrl}/${uniprotProteinID}`)
+          .then(response => {
+            if (!response.ok) {
+              document.getElementById("canonical").innerHTML = "Unable to fetch amino acid sequence for Uniprot code '" + uniprotProteinID + "'. Check that the code is correct and try again.";
+              throw new Error('Unable to fetch amino acid sequence.');
+            }
+            return response.json(); // Parse the JSON response
+          })
+          .then(data => {
+            // Access the protein amino acid sequence
+            const sequence = data.sequence.value;
+            const name = data.uniProtkbId;
+            const accession = data.primaryAccession;
+            // Resolve the Promise with the 'sequence' and protein name
+            const proteinInfo = {
+                proteinSequence: sequence,
+                proteinName: name,
+                proteinAccession: accession,
+            }
+            resolve(proteinInfo);
+
+          })
+          .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+          });
+    });
+}
+
+function findAndScoreMotifs() {
+   // get user input
+  var uniprotProteinIDList = document.getElementById("proteins").value;
+  // translate to an array by splitting on commas and trimming any extra white space
+  var uniprotProteinIDArray = uniprotProteinIDList.split(',')
+  uniprotProteinIDArray = uniprotProteinIDArray.filter(value => value.trim() !== '');
+
+    //set-up output
+    var resultCanonical = "<b>Canonical TBMs: R-x-x-x-x-G-(No Proline)-x: \<br></b>";
+    resultCanonical += '<b>Protein,Uniprot Code,Motif,Position,Score \<br></b>';
+
+    var resultExtended = "\<br> \<br> <b>Extended TBMs with 5, 6, or 7 amino acids between R and G: </b> \<br>";
+    resultExtended += '<b>Protein,Uniprot Code,Motif,Position,Score\<br></b>';
+
+//   get results
+    Promise.all([
+        findMotifs(uniprotProteinIDArray),
+        findExtendedMotifs(uniprotProteinIDArray)
+        ]).then(([canonicalResult, extendedResult]) => {
+        // Append the resolved result to resultCanonical here
+        resultCanonical += canonicalResult;
+        resultExtended += extendedResult;
+        // Now you can work with the updated resultCanonical
+//        console.log('Extended Result:', extendedResult);
+
+        var resultFinal = resultCanonical + resultExtended;
+        document.getElementById("canonical").innerHTML = resultFinal;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+}
+
+function extendedScoring(input){
+    const myJSON = '{"-2":{"P":0.0510192837,"G":0.187107438,"A":0.0246831956,"V":-0.1377410468,"L":-0.1377410468,"I":-0.1377410468,"M":-0.1377410468,"C":0.0126721763,"S":-0.1377410468,"T":-0.1377410468,"R":-0.1377410468,"K":-0.1377410468,"H":-0.1377410468,"D":-0.1377410468,"E":-0.1377410468,"N":-0.1377410468,"Q":-0.1377410468,"W":-0.1377410468,"F":-0.1377410468,"Y":-0.1377410468},"-1":{"P":-0.1377410468,"G":-0.1377410468,"A":-0.1377410468,"V":0.0190082645,"L":-0.1377410468,"I":0.0104683196,"M":-0.1377410468,"C":0.0099449036,"S":-0.1377410468,"T":-0.1377410468,"R":-0.1377410468,"K":-0.1377410468,"H":-0.1377410468,"D":0.1720661157,"E":0.0344077135,"N":-0.1377410468,"Q":0.0163085399,"W":-0.1377410468,"F":-0.1377410468,"Y":0.0132782369},"0":{"P":-0.1377410468,"G":0.2754820937,"A":-0.1377410468,"V":-0.1377410468,"L":-0.1377410468,"I":-0.1377410468,"M":-0.1377410468,"C":-0.1377410468,"S":-0.1377410468,"T":-0.1377410468,"R":-0.1377410468,"K":-0.1377410468,"H":-0.1377410468,"D":-0.1377410468,"E":-0.1377410468,"N":-0.1377410468,"Q":-0.1377410468,"W":-0.1377410468,"F":-0.1377410468,"Y":-0.1377410468},"1":{"P":-0.1377410468,"G":0.0087603306,"A":0.019862259,"V":0.0084022039,"L":0.005922865,"I":0.0110192837,"M":0.0143801653,"C":0.0298071625,"S":0.016446281,"T":0.0151239669,"R":0.008292011,"K":0.0084848485,"H":0.0133333333,"D":0.0224793388,"E":0.0324517906,"N":0.014600551,"Q":0.0210192837,"W":0.0081267218,"F":0.0093939394,"Y":0.0075482094},"2":{"P":0.012892562,"G":0.0087603306,"A":0.0185674931,"V":0.0103030303,"L":0.0070247934,"I":0.0080165289,"M":0.0092837466,"C":0.0132506887,"S":0.0132506887,"T":0.008292011,"R":0.0028099174,"K":0.0024793388,"H":0.0085950413,"D":0.0515702479,"E":0.0580165289,"N":0.0125344353,"Q":0.0071349862,"W":0.0050413223,"F":0.0074931129,"Y":0.0100826446}}'
+    const scoreSheet = JSON.parse(myJSON);
+
+    var gIndex = 0;
+
+    for (var i = 6, _pj_a = 9; i < _pj_a; i += 1){
+        if (input[i] == 'G'){
+          gIndex = i;
+        }
+    }
+
+    var totalScore = 0;
+    var offset = -2;
+
+    while (offset < 3){
+        const currentChar = input.charAt(gIndex + offset);
+
+        totalScore += scoreSheet[offset.toString()][currentChar];
+//        console.log(scoreSheet[offset.toString()][currentChar]);
+        offset += 1;
+    }
+
+    return totalScore;
+}
+
+
+// This code here served as good testing for a single protein extended scoring results.
+var motifs = '';
+var thisMotif = '';
+const uniprotProteinID = 'P78314';
+const proteinSequence = 'MAAEEMHWPVPMKAIGAQNLLTMPGGVAKAGYLHKKGGTQLQLLKWPLRFVIIHKRCVYYFKSSTSASPQGAFSLSGYNRVMRAAEETTSNNVFPFKIIHISKKHRTWFFSASSEEERKSWMALLRREIGHFHEKKDLPLDTSDSSSDTDSFYGAVERPVDISLSPYPTDNEDYEHDDEDDSYLEPDSPEPGRLEDALMHPPAYPPPPVPTPRKPAFSDMPRAHSFTSKGPGPLLPPPPPKHGLPDVGLAAEDSKRDPLCPRRAEPCPRVPATPRRMSDPPLSTMPTAPGLRKPPCFRESASPSPEPWTPGHGACSTSSAAIMATATSRNCDKLKSFHLSPRGPPTSEPPPVPANKPKFLKIAEEDPPREAAMPGLFVPPVAPRPPALKLPVPEAMARPAVLPRPEKPQLPHLQRSPPDGQSFRSFSFEKPRQPSQADTGGDDSDEDYEKVPLPNSVFVNTTESCEVERLFKATSPRGEPQDGLYCIRNSSTKSGKVLVVWDETSNKVRNYRIFEKDSKFYLEGEVLFVSVGSMVEHYHTHVLPSHQSLLLRHPYGYTGPR';
+
+for (var i = 0, _pj_a = proteinSequence.length-6; i < _pj_a; i += 1) {
+    if (proteinSequence[i] == 'R' && proteinSequence[i+8] == 'G'){
+      const thisMotif = proteinSequence.substring(i, i+11);
+      var score = extendedScoring(thisMotif);
+      realIndex = i + 1;
+      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',score:' + score + '\<br>';
+    }
+    else if (proteinSequence[i] == 'R' && proteinSequence[i+7] == 'G'){
+      thisMotif = proteinSequence.substring(i, i+10);
+      score = extendedScoring(thisMotif);
+      realIndex = i + 1;
+      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',score:' + score + '\<br>';
+    }
+    else if (proteinSequence[i] == 'R' && proteinSequence[i+6] == 'G'){
+      thisMotif = proteinSequence.substring(i, i+9);
+      score = extendedScoring(thisMotif);
+      realIndex = i + 1;
+      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',score:' + score + '\<br>';
+    };
+};
+
+if (motifs.length < 48){
+motifs += "No motifs found.";
+}
+//console.log('Extended Results:', motifs);

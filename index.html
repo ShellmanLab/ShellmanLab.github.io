@@ -11,7 +11,8 @@
 <h1>Tankyrase Binding Motif (TBM) Search Project</h1>
 
 
-<h3>Input single-letter amino acid sequence below:</h3>
+<!--<h3>Input single-letter amino acid sequence below:</h3>-->
+<h3>Input Uniprot Code(s) separated by a comma:</h3>
 
 <!--
 <h3 id="countDisplay">
@@ -35,21 +36,23 @@
     </div>
   </div>
 
-<!-- OLD SEPARATED SCORING BUTTONS
-<button type="submit" onclick="findMotifs()">Find Canonical Motifs</button> <br> <br>
-<button type="submit" onclick="extendedSearch()">Find Extended Motifs</button> <br> <br>
--->
-<br> <br>
-<button type="submit" onclick="scoreMotifs()">Score any 8-amino-acid sequence</button> 
+&nbsp;&nbsp;
+<button type="submit" onclick="clearText()">Clear</button>
+
+<br> <br> <br> <br>
+<h3>Input one sequence of 8 amino acids to be scored:</h3>
+<textarea id="8proteins" name="8proteins" rows="2" cols="100"></textarea> <br> <br>
+<button type="submit" onclick="scoreMotifs()">Score any 8-amino-acid sequence</button>
 <div class="info-container">
     <img src="infoBub.png" class="info">
     <div class="info-bubble-2">
         Score any 8-residue peptide sequence regardless of the presence of R1/G6, using canonical score system.
     </div>
   </div>
+&nbsp;&nbsp;
+<button type="submit" onclick="clearText2()">Clear</button>
 
-<br> <br> 
-<button type="submit" onclick="clearText()">Clear</button>
+<p id="score"></p>
 
 <p id="notice"><em>Note: Scores are a predication and do not replace experimental data.</em></p>
 <br><br>
@@ -75,62 +78,7 @@
     </div>
 </div>
 
-
-<!--
-<p>Input one sequence of 8 amino acids to be scored:</p>
-<textarea id="8proteins" name="8proteins" rows="2" cols="100"></textarea> <br> <br>
-<button type="submit" onclick="scoreMotifs()">Score Motif!</button>
-<button type="submit" onclick="clearText2()">Clear</button>
-
-<p id="score"></p>
-
--->
-
 <br> <br> <br> <br>
 
-
-
-
 </body>
 </html>
-
-
-
-
-
-
-<!--
-    OLD HOME PAGE CODE
-
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-<div class="topnav">
-    <a class="active" href="index.html">General</a>
-    <a href="anschutz.html">Anschutz</a>
-</div>
-
-<h1>Motif Search Project (test)</h1>
-<h2>Use this for general motif searches!</h2>
-<p>Input protein sequence below:</p>
-<textarea id="proteins" name="proteins" rows="6" cols="100"></textarea> <br> <br>
-<button type="submit">Find Motifs!</button>
-
-
-<br> <br> 
-
-<h4>Extended search function - find motifs with 5, 6, or 7 amino acids separating R and G</h3>
-<p>Input amino acid sequence below:</p>
-<textarea id="extended" name="extended" rows="6" cols="100"></textarea> <br> <br>
-<button type="submit" onclick="extendedSearch()">Find extended motifs!</button>
-<button type="submit" onclick="clearText3()">Clear</button>
-<p id="extendedOutput"></p>
-
-</body>
-</html>
-
--->

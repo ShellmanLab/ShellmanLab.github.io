@@ -16,9 +16,7 @@ function findMotifs(uniprotProteinIDArray) {
         //use sequence in search
         proteinResult = search(proteinInfo.proteinSequence, proteinInfo.proteinName, proteinInfo.proteinAccession);
 //        console.log("Protein Result:", proteinResult);
-        if (proteinResult.length < 0){
-            proteinResult += "No motifs found.";
-        }
+
         return proteinResult;
     })
     .catch(error => {
@@ -41,7 +39,7 @@ function findMotifs(uniprotProteinIDArray) {
 
 // find and score main motifs -- canonical
 function search(proteinSequence, proteinName, proteinAccession) {
-  var motifs = '';
+  var canMotifs = '';
 
   for (var i = 0, _pj_a = proteinSequence.length-6; i < _pj_a; i += 1) {
 
@@ -54,19 +52,15 @@ function search(proteinSequence, proteinName, proteinAccession) {
       realIndex = i + 1
 
       // Add motif to new line of table
-      motifs = motifs + proteinName + ',' + proteinAccession + ',' + thisMotif + ',' + realIndex + ',' + thisScore + '\<br>';
+      canMotifs = canMotifs + proteinName + ',' + proteinAccession + ',' + thisMotif + ',' + realIndex + ',' + thisScore + '\<br>';
     };
   };
-  return motifs;
-}
 
-function findExtendedMotifs(uniprotProteinIDArray) {
-  return new Promise((resolve, reject) => {
-    // Simulate an asynchronous operation, replace with your actual code
-    setTimeout(() => {
-      resolve("Promise resolved successfully!"); // Resolve with a value
-    }, 1000); // Simulated delay
-  });
+  if (canMotifs == ''){
+    canMotifs += "No canonical motif found for " + proteinAccession + " (" + proteinName + ")\<br>";
+  }
+
+  return canMotifs;
 }
 
 // Finds the extended motifs for the input list of Uniprot Codes
@@ -100,8 +94,8 @@ function findExtendedMotifs(uniprotProteinIDArray) {
         };
       };
 
-      if (motifs.length < 0){
-        motifs += "No motifs found.";
+      if (motifs == ''){
+        motifs += "No extended motifs found for " + proteinInfo.proteinAccession + " (" + proteinInfo.proteinName + ")\<br>";
       }
         return motifs;
     })
@@ -228,8 +222,8 @@ function findAndScoreMotifs() {
    // get user input
   var uniprotProteinIDList = document.getElementById("proteins").value;
   // translate to an array by splitting on commas and trimming any extra white space
-  var uniprotProteinIDArray = uniprotProteinIDList.split(',')
-  uniprotProteinIDArray = uniprotProteinIDArray.filter(value => value.trim() !== '');
+  var uniprotProteinIDArray = uniprotProteinIDList.split(',').map(item => item.trim());
+  uniprotProteinIDArray = uniprotProteinIDArray.filter(value => value !== '');
 
     //set-up output
     var resultCanonical = "<b>Canonical TBMs: R-x-x-x-x-G-(No Proline)-x: \<br></b>";
@@ -285,33 +279,33 @@ function extendedScoring(input){
 
 
 // This code here served as good testing for a single protein extended scoring results.
-var motifs = '';
-var thisMotif = '';
-const uniprotProteinID = 'P78314';
-const proteinSequence = 'MAAEEMHWPVPMKAIGAQNLLTMPGGVAKAGYLHKKGGTQLQLLKWPLRFVIIHKRCVYYFKSSTSASPQGAFSLSGYNRVMRAAEETTSNNVFPFKIIHISKKHRTWFFSASSEEERKSWMALLRREIGHFHEKKDLPLDTSDSSSDTDSFYGAVERPVDISLSPYPTDNEDYEHDDEDDSYLEPDSPEPGRLEDALMHPPAYPPPPVPTPRKPAFSDMPRAHSFTSKGPGPLLPPPPPKHGLPDVGLAAEDSKRDPLCPRRAEPCPRVPATPRRMSDPPLSTMPTAPGLRKPPCFRESASPSPEPWTPGHGACSTSSAAIMATATSRNCDKLKSFHLSPRGPPTSEPPPVPANKPKFLKIAEEDPPREAAMPGLFVPPVAPRPPALKLPVPEAMARPAVLPRPEKPQLPHLQRSPPDGQSFRSFSFEKPRQPSQADTGGDDSDEDYEKVPLPNSVFVNTTESCEVERLFKATSPRGEPQDGLYCIRNSSTKSGKVLVVWDETSNKVRNYRIFEKDSKFYLEGEVLFVSVGSMVEHYHTHVLPSHQSLLLRHPYGYTGPR';
-
-for (var i = 0, _pj_a = proteinSequence.length-6; i < _pj_a; i += 1) {
-    if (proteinSequence[i] == 'R' && proteinSequence[i+8] == 'G'){
-      const thisMotif = proteinSequence.substring(i, i+11);
-      var score = extendedScoring(thisMotif);
-      realIndex = i + 1;
-      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',score:' + score + '\<br>';
-    }
-    else if (proteinSequence[i] == 'R' && proteinSequence[i+7] == 'G'){
-      thisMotif = proteinSequence.substring(i, i+10);
-      score = extendedScoring(thisMotif);
-      realIndex = i + 1;
-      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',score:' + score + '\<br>';
-    }
-    else if (proteinSequence[i] == 'R' && proteinSequence[i+6] == 'G'){
-      thisMotif = proteinSequence.substring(i, i+9);
-      score = extendedScoring(thisMotif);
-      realIndex = i + 1;
-      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',score:' + score + '\<br>';
-    };
-};
-
-if (motifs.length < 48){
-motifs += "No motifs found.";
-}
+//var motifs = '';
+//var thisMotif = '';
+//const uniprotProteinID = 'P78314';
+//const proteinSequence = 'MAAEEMHWPVPMKAIGAQNLLTMPGGVAKAGYLHKKGGTQLQLLKWPLRFVIIHKRCVYYFKSSTSASPQGAFSLSGYNRVMRAAEETTSNNVFPFKIIHISKKHRTWFFSASSEEERKSWMALLRREIGHFHEKKDLPLDTSDSSSDTDSFYGAVERPVDISLSPYPTDNEDYEHDDEDDSYLEPDSPEPGRLEDALMHPPAYPPPPVPTPRKPAFSDMPRAHSFTSKGPGPLLPPPPPKHGLPDVGLAAEDSKRDPLCPRRAEPCPRVPATPRRMSDPPLSTMPTAPGLRKPPCFRESASPSPEPWTPGHGACSTSSAAIMATATSRNCDKLKSFHLSPRGPPTSEPPPVPANKPKFLKIAEEDPPREAAMPGLFVPPVAPRPPALKLPVPEAMARPAVLPRPEKPQLPHLQRSPPDGQSFRSFSFEKPRQPSQADTGGDDSDEDYEKVPLPNSVFVNTTESCEVERLFKATSPRGEPQDGLYCIRNSSTKSGKVLVVWDETSNKVRNYRIFEKDSKFYLEGEVLFVSVGSMVEHYHTHVLPSHQSLLLRHPYGYTGPR';
+//
+//for (var i = 0, _pj_a = proteinSequence.length-6; i < _pj_a; i += 1) {
+//    if (proteinSequence[i] == 'R' && proteinSequence[i+8] == 'G'){
+//      const thisMotif = proteinSequence.substring(i, i+11);
+//      var score = extendedScoring(thisMotif);
+//      realIndex = i + 1;
+//      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',score:' + score + '\<br>';
+//    }
+//    else if (proteinSequence[i] == 'R' && proteinSequence[i+7] == 'G'){
+//      thisMotif = proteinSequence.substring(i, i+10);
+//      score = extendedScoring(thisMotif);
+//      realIndex = i + 1;
+//      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',score:' + score + '\<br>';
+//    }
+//    else if (proteinSequence[i] == 'R' && proteinSequence[i+6] == 'G'){
+//      thisMotif = proteinSequence.substring(i, i+9);
+//      score = extendedScoring(thisMotif);
+//      realIndex = i + 1;
+//      motifs = motifs + 'proteinInfo.proteinName' + ','+ 'proteinInfo.proteinAccession' + ',' + thisMotif + ',' + realIndex + ',score:' + score + '\<br>';
+//    };
+//};
+//
+//if (motifs == ''){
+//motifs += "No motifs found.";
+//}
 //console.log('Extended Results:', motifs);

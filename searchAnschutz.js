@@ -57,7 +57,7 @@ function search(proteinSequence, proteinName, proteinAccession) {
   };
 
   if (canMotifs == ''){
-    canMotifs += "No canonical motif found for " + proteinAccession + " (" + proteinName + ")\<br>";
+    canMotifs += "No canonical motifs found for " + proteinAccession + " (" + proteinName + ")\<br>";
   }
 
   return canMotifs;
@@ -222,7 +222,7 @@ function findAndScoreMotifs() {
    // get user input
   var uniprotProteinIDList = document.getElementById("proteins").value;
   // translate to an array by splitting on commas and trimming any extra white space
-  var uniprotProteinIDArray = uniprotProteinIDList.split(',').map(item => item.trim());
+  var uniprotProteinIDArray = uniprotProteinIDList.split('\n').map(item => item.trim());
   uniprotProteinIDArray = uniprotProteinIDArray.filter(value => value !== '');
 
     //set-up output

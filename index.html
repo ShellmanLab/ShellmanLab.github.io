@@ -12,7 +12,7 @@
 
 
 <!--<h3>Input single-letter amino acid sequence below:</h3>-->
-<h3>Enter Uniprot code(s) below, one code per line:</h3>
+<h3>Enter UniProt code(s) below, one code per line:</h3>
 
 <!--
 <h3 id="countDisplay">
@@ -26,7 +26,7 @@
 <div class="container">
     <div class="column"> <!--Put this stuff in left column so we can have tips on the right side of it-->
 
-<textarea id="proteins" name="proteins" rows="6" cols="100"></textarea> <br> <br>
+<textarea id="proteins" name="proteins" rows="6" cols="90"></textarea> <br> <br>
 <button type="submit" onclick="findAndScoreMotifs()">Find and Score Motifs!</button>
 <div class="info-container">
     <img src="infoBub.png" class="info">
@@ -41,7 +41,7 @@
 
 <br> <br> <br> <br>
 <h3>Input one sequence of 8 amino acids to be scored:</h3>
-<textarea id="8proteins" name="8proteins" rows="2" cols="100"></textarea> <br> <br>
+<textarea id="8proteins" name="8proteins" rows="2" cols="90"></textarea> <br> <br>
 <button type="submit" onclick="scoreMotifs()">Score any 8-amino-acid sequence</button>
 <div class="info-container">
     <img src="infoBub.png" class="info">
@@ -62,19 +62,18 @@
 
     </div>
     <div class="column">
-        <textarea id="tipsTricks" rows="6" cols="50" readonly>Tips and Tricks: 
-- Single-letter amino acid sequence can be copied from database such as Uniprot
-- Larger score suggests more favorable binding
+        <textarea id="tipsTricks" rows="10" cols="60" readonly>Tips and Tricks:
+- A list of UniProt codes from a column in an excel file can be copied and pasted into the box
+- Outputs can be copied and pasted into an excel file and delimited by comas
+- Larger scores suggest more favorable binding
 - TBMs should be in unstructured regions, see helpful links below for more info</textarea>
         <br> <br>
-        <textarea id="tipsTricks2" rows="10" cols="50" readonly>Helpful links:
--For step-by-step instructions: “Protocols.io link”
--For more details and examples: “PlosOne link”
--Wholistic TBM identification and validation: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6082341/
+        <textarea id="tipsTricks2" rows="10" cols="60" readonly>Helpful links:
+-Holistic TBM identification and validation:
+    -https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6082341/
 -Canonical Score:
     -https://pubmed.ncbi.nlm.nih.gov/22153077/
-    -“PlosOne link”
--Extended Score: “PlosOne link”</textarea>
+</textarea>
     </div>
 </div>
 

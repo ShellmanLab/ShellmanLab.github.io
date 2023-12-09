@@ -8,24 +8,19 @@
 <body>
     <div class="buffer"></div>
 
-<h1>Tankyrase-Binding Motif (TBM) Hunter</h1>
+    <div id="TextEdit" class="editable">
+        <br>
+        <div id="requestInner" style="
+            margin-left:10px; margin-right:100px; "
+                contenteditable="false" UNSELECTABLE="ON">
+            <h1>TBM Hunter</h1>
+            <h2>Search and score tankyrase-binding motifs</h2>
+    </div>
 
-
-<!--<h3>Input single-letter amino acid sequence below:</h3>-->
-<h3>Enter UniProt code(s) below, one code per line:</h3>
-
-<!--
-<h3 id="countDisplay">
-    This tool has been used: 
-      <script type="text/javascript">
-        document.write(localStorage.getItem("counter"))
-      </script>
-    times!
-</h3>
--->
 <div class="container">
-    <div class="column"> <!--Put this stuff in left column so we can have tips on the right side of it-->
-
+    <div class="column" style="flex: 1; padding-left: 25px;"> <!--Put this stuff in left column so we can have tips on the right side of it-->
+<!--<h3>Input single-letter amino acid sequence below:</h3>-->
+<h3>  Enter UniProt code(s) below, one code per line:</h3>
 <textarea id="proteins" name="proteins" rows="6" cols="90"></textarea> <br> <br>
 <button type="submit" onclick="findAndScoreMotifs()">Find and Score Motifs!</button>
 <div class="info-container">
@@ -62,19 +57,53 @@
 
     </div>
     <div class="column">
-        <textarea id="tipsTricks" rows="10" cols="60" readonly>Tips and Tricks:
-- A list of UniProt codes from a column in an excel file can be copied and pasted into the box
-- Outputs can be copied and pasted into an excel file and delimited by comas
-- Larger scores suggest more favorable binding
-- TBMs should be in unstructured regions, see helpful links below for more info</textarea>
-        <br> <br>
-        <textarea id="tipsTricks2" rows="10" cols="60" readonly>Helpful links:
--Holistic TBM identification and validation:
-    -https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6082341/
--Canonical Score:
-    -https://pubmed.ncbi.nlm.nih.gov/22153077/
-</textarea>
-    </div>
+<div id="TextEdit" class="editable">
+    <br>
+    <div id="requestInner" style="border:double 2px black;
+		margin-left:10px; margin-right:100px; padding:10px"
+            contenteditable="false" UNSELECTABLE="ON">
+        <b>Tips and Tricks:</b>
+            <ul>
+        <li>Protocol for using this site:  <a target="_blank"
+	href="http://dx.doi.org/10.17504/protocols.io.n2bvj32xplk5/v1">A Computational Method for detecting and evaluating
+Tankyrase-Binding Motifs. Protocols.io, 2023.</a>
+</li>
+        <li>A list of UniProt codes from a column in an Excel file can be copied and pasted
+into the box</li>
+        <li>Outputs can be copied and pasted into an Excel file and delimited by comas</li>
+        <li>Larger scores suggest more favorable binding</li>
+        <li>TBMs should be in unstructured regions, see helpful links below for more info</li>
+    </ul>
+
+    <b>Helpful Links:</b>
+    <ul>
+        <li>Holistic TBM identification and validation: <a target="_blank"
+	href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6082341">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6082341</a>
+/</li>
+        <li>Canonical Score: <a target="_blank"
+	href="https://pubmed.ncbi.nlm.nih.gov/22153077/">https://pubmed.ncbi.nlm.nih.gov/22153077/</a>
+</li>
+    </ul>
+
+	<hr />
+        Please cite the following articles in any publication that uses analysis
+or studies inspired by or benefiting from TBM Hunter:
+     <ul>
+        <li>Clements CM, Shellman SX, Shellman MH, Shellman YG. A Computational Method for
+detecting and evaluating Tankyrase-Binding Motifs. Protocols.io, 2023. <a target="_blank"
+	href="https:dx.doi.org/10.17504/protocols.io.n2bvj32xplk5/v1">dx.doi.org/10.17504/protocols.io.n2bvj32xplk5/v1.
+Sci. 2023; 24(23): 16964.</a>
+</li>
+        <li>Clements CM, Shellman SX, Shellman MH, Shellman YG. TBM Hunter: identify and score
+canonical, extended, and unconventional Tankyrase-binding motifs in any protein. Int. J. Mol.
+Sci. 2023; 24(23): 16964. <a target="_blank"
+	href="https://doi.org/10.3390/ijms242316964">https://doi.org/10.3390/ijms242316964</a>
+</li>
+    </ul>
+    <hr />
+   <b>Website creators:</b>  Samantha Shellman and Melody Shellman
+   <br> <b>Contact:</b> Yiqun.Shellman@cuanschutz.edu
+
 </div>
 
 <br> <br> <br> <br>

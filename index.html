@@ -34,7 +34,14 @@
 &nbsp;&nbsp;
 <button type="submit" onclick="clearText()">Clear</button>
 
-<br> <br> <br> <br>
+        <br> <br>
+
+<div class="button-container" id = "CSVButtonContainer" style="display:none">
+    <button type="button" id="btnDownloadCanonicalCSV">Download Canonical TBM CSV!</button>
+    <button type="button" id="btnDownloadExtendedCSV" >Download Extended TBM CSV!</button>
+</div>
+
+<br> <br>
 <h3>Input one sequence of 8 amino acids to be scored:</h3>
 <textarea id="8proteins" name="8proteins" rows="2" cols="90"></textarea> <br> <br>
 <button type="submit" onclick="scoreMotifs()">Score any 8-amino-acid sequence</button>
@@ -79,7 +86,7 @@ into the box</li>
     <ul>
         <li>Holistic TBM identification and validation: <a target="_blank"
 	href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6082341">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6082341</a>
-/</li>
+</li>
         <li>Canonical Score: <a target="_blank"
 	href="https://pubmed.ncbi.nlm.nih.gov/22153077/">https://pubmed.ncbi.nlm.nih.gov/22153077/</a>
 </li>

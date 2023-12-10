@@ -1,5 +1,15 @@
 localStorage.setItem("counter", "24");
 
+// Define Global vars
+let resultCanonical;
+let resultExtended;
+
+// read in scoring files
+const myCanonicalScoringJSON = '{"1":{"P":-0.1295336788,"G":-0.1295336788,"A":-0.1295336788,"V":-0.1295336788,"L":-0.1295336788,"I":-0.1295336788,"M":-0.1295336788,"C":-0.1295336788,"S":-0.1295336788,"T":-0.1295336788,"R":0.2590673575,"K":-0.1295336788,"H":-0.1295336788,"D":-0.1295336788,"E":-0.1295336788,"N":-0.1295336788,"Q":-0.1295336788,"W":-0.1295336788,"F":-0.1295336788,"Y":-0.1295336788}, "2":{"P":0.0141450777,"G":0.0130829016,"A":0.0110362694,"V":0.0076943005,"L":0.0186010363,"I":0.0079533679,"M":0.0156994819,"C":0.0099481865,"S":0.0164507772,"T":0.019119171,"R":0.0057512953,"K":0.0050518135,"H":0.0087305699,"D":0.019119171,"E":0.0294559585,"N":0.0066062176,"Q":0.0124093264,"W":0.0117875648,"F":0.0113989637,"Y":0.0150518135}, "3":{"P":0.0265544041,"G":0.0066321244,"A":0.0293264249,"V":0.0094559585,"L":0.0067098446,"I":0.0051036269,"M":0.0118134715,"C":0.0102072539,"S":0.0178238342,"T":0.0099740933,"R":0.014507772,"K":0.0111658031,"H":0.006865285,"D":0.0287046632,"E":0.0270725389,"N":0.0077720207,"Q":0.0151295337,"W":0.0086787565,"F":-0.1295336788,"Y":0.0055958549}, "4":{"P":0.0479792746,"G":0.1759585492,"A":0.0232124352,"V":-0.1295336788,"L":-0.1295336788,"I":-0.1295336788,"M":-0.1295336788,"C":0.0119170984,"S":-0.1295336788,"T":-0.1295336788,"R":-0.1295336788,"K":-0.1295336788,"H":-0.1295336788,"D":-0.1295336788,"E":-0.1295336788,"N":-0.1295336788,"Q":-0.1295336788,"W":-0.1295336788,"F":-0.1295336788,"Y":-0.1295336788}, "5":{"P":-0.1295336788,"G":-0.1295336788,"A":-0.1295336788,"V":0.0178756477,"L":-0.1295336788,"I":0.0098445596,"M":-0.1295336788,"C":0.0093523316,"S":-0.1295336788,"T":-0.1295336788,"R":-0.1295336788,"K":-0.1295336788,"H":-0.1295336788,"D":0.1618134715,"E":0.032357513,"N":-0.1295336788,"Q":0.0153367876,"W":-0.1295336788,"F":-0.1295336788,"Y":0.0124870466}, "6":{"P":-0.1295336788,"G":0.2590673575,"A":-0.1295336788,"V":-0.1295336788,"L":-0.1295336788,"I":-0.1295336788,"M":-0.1295336788,"C":-0.1295336788,"S":-0.1295336788,"T":-0.1295336788,"R":-0.1295336788,"K":-0.1295336788,"H":-0.1295336788,"D":-0.1295336788,"E":-0.1295336788,"N":-0.1295336788,"Q":-0.1295336788,"W":-0.1295336788,"F":-0.1295336788,"Y":-0.1295336788}, "7":{"P":-0.1295336788,"G":0.008238342,"A":0.0186787565,"V":0.0079015544,"L":0.0055699482,"I":0.0103626943,"M":0.0135233161,"C":0.0280310881,"S":0.0154663212,"T":0.0142227979,"R":0.0077979275,"K":0.0079792746,"H":0.0125388601,"D":0.0211398964,"E":0.0305181347,"N":0.0137305699,"Q":0.0197668394,"W":0.007642487,"F":0.0088341969,"Y":0.0070984456}, "8":{"P":0.0121243523,"G":0.008238342,"A":0.0174611399,"V":0.0096891192,"L":0.0066062176,"I":0.0075388601,"M":0.0087305699,"C":0.0124611399,"S":0.0124611399,"T":0.0077979275,"R":0.002642487,"K":0.0023316062,"H":0.0080829016,"D":0.0484974093,"E":0.0545595855,"N":0.0117875648,"Q":0.0067098446,"W":0.0047409326,"F":0.0070466321,"Y":0.0094818653}}';
+const canonicalScoringScoreSheet = JSON.parse(myCanonicalScoringJSON);
+
+const myExtendedScoringJSON = '{"-2":{"P":0.0510192837,"G":0.187107438,"A":0.0246831956,"V":-0.1377410468,"L":-0.1377410468,"I":-0.1377410468,"M":-0.1377410468,"C":0.0126721763,"S":-0.1377410468,"T":-0.1377410468,"R":-0.1377410468,"K":-0.1377410468,"H":-0.1377410468,"D":-0.1377410468,"E":-0.1377410468,"N":-0.1377410468,"Q":-0.1377410468,"W":-0.1377410468,"F":-0.1377410468,"Y":-0.1377410468},"-1":{"P":-0.1377410468,"G":-0.1377410468,"A":-0.1377410468,"V":0.0190082645,"L":-0.1377410468,"I":0.0104683196,"M":-0.1377410468,"C":0.0099449036,"S":-0.1377410468,"T":-0.1377410468,"R":-0.1377410468,"K":-0.1377410468,"H":-0.1377410468,"D":0.1720661157,"E":0.0344077135,"N":-0.1377410468,"Q":0.0163085399,"W":-0.1377410468,"F":-0.1377410468,"Y":0.0132782369},"0":{"P":-0.1377410468,"G":0.2754820937,"A":-0.1377410468,"V":-0.1377410468,"L":-0.1377410468,"I":-0.1377410468,"M":-0.1377410468,"C":-0.1377410468,"S":-0.1377410468,"T":-0.1377410468,"R":-0.1377410468,"K":-0.1377410468,"H":-0.1377410468,"D":-0.1377410468,"E":-0.1377410468,"N":-0.1377410468,"Q":-0.1377410468,"W":-0.1377410468,"F":-0.1377410468,"Y":-0.1377410468},"1":{"P":-0.1377410468,"G":0.0087603306,"A":0.019862259,"V":0.0084022039,"L":0.005922865,"I":0.0110192837,"M":0.0143801653,"C":0.0298071625,"S":0.016446281,"T":0.0151239669,"R":0.008292011,"K":0.0084848485,"H":0.0133333333,"D":0.0224793388,"E":0.0324517906,"N":0.014600551,"Q":0.0210192837,"W":0.0081267218,"F":0.0093939394,"Y":0.0075482094},"2":{"P":0.012892562,"G":0.0087603306,"A":0.0185674931,"V":0.0103030303,"L":0.0070247934,"I":0.0080165289,"M":0.0092837466,"C":0.0132506887,"S":0.0132506887,"T":0.008292011,"R":0.0028099174,"K":0.0024793388,"H":0.0085950413,"D":0.0515702479,"E":0.0580165289,"N":0.0125344353,"Q":0.0071349862,"W":0.0050413223,"F":0.0074931129,"Y":0.0100826446}}'
+const extendedScoringScoreSheet = JSON.parse(myExtendedScoringJSON);
 
 // Finds the canonical motifs for the input list of Uniprot Codes
 function findMotifs(uniprotProteinIDArray) {
@@ -28,8 +38,8 @@ function findMotifs(uniprotProteinIDArray) {
     return Promise.all(promises)
     .then(proteinResults => {
       // Concatenate all results into a single string
-      var resultCanonical = proteinResults.join('');
-      return resultCanonical;
+      var singleProteinCanonicalResults = proteinResults.join('');
+      return singleProteinCanonicalResults;
     })
     .catch(error => {
       console.error('Error:', error);
@@ -108,8 +118,8 @@ function findExtendedMotifs(uniprotProteinIDArray) {
     return Promise.all(promises)
     .then(proteinExtendedResults => {
       // Concatenate all results into a single string
-      var resultExtended = proteinExtendedResults.join('');
-      return resultExtended;
+      var singleProteinResultExtended = proteinExtendedResults.join('');
+      return singleProteinResultExtended;
     })
     .catch(error => {
       console.error('Error:', error);
@@ -165,22 +175,18 @@ function getScore(thisMotif){
   // score initialized to 0
   thisScore = 0;
 
-  // read in scoring file
-  const myJSON = '{"1":{"P":-0.1295336788,"G":-0.1295336788,"A":-0.1295336788,"V":-0.1295336788,"L":-0.1295336788,"I":-0.1295336788,"M":-0.1295336788,"C":-0.1295336788,"S":-0.1295336788,"T":-0.1295336788,"R":0.2590673575,"K":-0.1295336788,"H":-0.1295336788,"D":-0.1295336788,"E":-0.1295336788,"N":-0.1295336788,"Q":-0.1295336788,"W":-0.1295336788,"F":-0.1295336788,"Y":-0.1295336788}, "2":{"P":0.0141450777,"G":0.0130829016,"A":0.0110362694,"V":0.0076943005,"L":0.0186010363,"I":0.0079533679,"M":0.0156994819,"C":0.0099481865,"S":0.0164507772,"T":0.019119171,"R":0.0057512953,"K":0.0050518135,"H":0.0087305699,"D":0.019119171,"E":0.0294559585,"N":0.0066062176,"Q":0.0124093264,"W":0.0117875648,"F":0.0113989637,"Y":0.0150518135}, "3":{"P":0.0265544041,"G":0.0066321244,"A":0.0293264249,"V":0.0094559585,"L":0.0067098446,"I":0.0051036269,"M":0.0118134715,"C":0.0102072539,"S":0.0178238342,"T":0.0099740933,"R":0.014507772,"K":0.0111658031,"H":0.006865285,"D":0.0287046632,"E":0.0270725389,"N":0.0077720207,"Q":0.0151295337,"W":0.0086787565,"F":-0.1295336788,"Y":0.0055958549}, "4":{"P":0.0479792746,"G":0.1759585492,"A":0.0232124352,"V":-0.1295336788,"L":-0.1295336788,"I":-0.1295336788,"M":-0.1295336788,"C":0.0119170984,"S":-0.1295336788,"T":-0.1295336788,"R":-0.1295336788,"K":-0.1295336788,"H":-0.1295336788,"D":-0.1295336788,"E":-0.1295336788,"N":-0.1295336788,"Q":-0.1295336788,"W":-0.1295336788,"F":-0.1295336788,"Y":-0.1295336788}, "5":{"P":-0.1295336788,"G":-0.1295336788,"A":-0.1295336788,"V":0.0178756477,"L":-0.1295336788,"I":0.0098445596,"M":-0.1295336788,"C":0.0093523316,"S":-0.1295336788,"T":-0.1295336788,"R":-0.1295336788,"K":-0.1295336788,"H":-0.1295336788,"D":0.1618134715,"E":0.032357513,"N":-0.1295336788,"Q":0.0153367876,"W":-0.1295336788,"F":-0.1295336788,"Y":0.0124870466}, "6":{"P":-0.1295336788,"G":0.2590673575,"A":-0.1295336788,"V":-0.1295336788,"L":-0.1295336788,"I":-0.1295336788,"M":-0.1295336788,"C":-0.1295336788,"S":-0.1295336788,"T":-0.1295336788,"R":-0.1295336788,"K":-0.1295336788,"H":-0.1295336788,"D":-0.1295336788,"E":-0.1295336788,"N":-0.1295336788,"Q":-0.1295336788,"W":-0.1295336788,"F":-0.1295336788,"Y":-0.1295336788}, "7":{"P":-0.1295336788,"G":0.008238342,"A":0.0186787565,"V":0.0079015544,"L":0.0055699482,"I":0.0103626943,"M":0.0135233161,"C":0.0280310881,"S":0.0154663212,"T":0.0142227979,"R":0.0077979275,"K":0.0079792746,"H":0.0125388601,"D":0.0211398964,"E":0.0305181347,"N":0.0137305699,"Q":0.0197668394,"W":0.007642487,"F":0.0088341969,"Y":0.0070984456}, "8":{"P":0.0121243523,"G":0.008238342,"A":0.0174611399,"V":0.0096891192,"L":0.0066062176,"I":0.0075388601,"M":0.0087305699,"C":0.0124611399,"S":0.0124611399,"T":0.0077979275,"R":0.002642487,"K":0.0023316062,"H":0.0080829016,"D":0.0484974093,"E":0.0545595855,"N":0.0117875648,"Q":0.0067098446,"W":0.0047409326,"F":0.0070466321,"Y":0.0094818653}}';
-  const scoreSheet = JSON.parse(myJSON);
-
   // add score for each of the 8 characters
   for (var i = 1; i < 9; i += 1) {
     // Get char at current position
     currentChar = thisMotif.charAt(i-1);
     // calculate position score based off current position (i) and currentChar at position
-    positionScore = scoreSheet[i.toString()][currentChar];
+    positionScore = canonicalScoringScoreSheet[i.toString()][currentChar];
     thisScore += positionScore;
 //    console.log(currentChar, positionScore, thisScore)
   }
 
 //  console.log(thisScore);
-
+   thisScore  = thisScore.toFixed(5);
   return thisScore;
 }
 
@@ -221,15 +227,20 @@ function getAminoAcidSequence(uniprotProteinID) {
 function findAndScoreMotifs() {
    // get user input
   var uniprotProteinIDList = document.getElementById("proteins").value;
+  // hide download button, if not hidden already
+  const btnContainer = document.getElementById("CSVButtonContainer");
+   btnContainer.style.display = "none";
+   // clear results, if not already cleared
+   document.getElementById("canonical").innerHTML = "";
   // translate to an array by splitting on commas and trimming any extra white space
   var uniprotProteinIDArray = uniprotProteinIDList.split('\n').map(item => item.trim());
   uniprotProteinIDArray = uniprotProteinIDArray.filter(value => value !== '');
 
     //set-up output
-    var resultCanonical = "<b>Canonical TBMs: R-x-x-x-x-G-(No Proline)-x: \<br></b>";
+    resultCanonical = "<b>Canonical TBMs: R-x-x-x-x-G-(No Proline)-x: \<br></b>";
     resultCanonical += '<b>Protein,Uniprot Code,Motif,Position,Score \<br></b>';
 
-    var resultExtended = "\<br> \<br> <b>Extended TBMs with 5, 6, or 7 amino acids between R and G: </b> \<br>";
+    resultExtended = "\<br> \<br> <b>Extended TBMs with 5, 6, or 7 amino acids between R and G: </b> \<br>";
     resultExtended += '<b>Protein,Uniprot Code,Motif,Position,Score\<br></b>';
 
 //   get results
@@ -243,17 +254,47 @@ function findAndScoreMotifs() {
         // Now you can work with the updated resultCanonical
 //        console.log('Extended Result:', extendedResult);
 
+        // Display Download button
+        const btnContainer = document.getElementById("CSVButtonContainer");
+        btnContainer.style.display = "block";
+
         var resultFinal = resultCanonical + resultExtended;
-        document.getElementById("canonical").innerHTML = resultFinal;
+
+        if (uniprotProteinIDArray.length < 150) {
+            // If there are < 150 proteins, display on page
+            document.getElementById("canonical").innerHTML = resultFinal;
+        } else {
+            // Otherwise, do not display
+            document.getElementById("canonical").innerHTML = "There are too many TBMs to display. Download the CSV files above to view TBMs.";
+        }
       })
       .catch(error => {
         console.error('Error:', error);
       });
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    const btnDownloadCanonicalCsv = document.getElementById("btnDownloadCanonicalCSV");
+    btnDownloadCanonicalCsv.addEventListener("click", () => {
+        var csvResults = resultCanonical.replace(/<br\s*\/?>/gi, "\n");
+        csvResults = csvResults.replace(/<b\s*\/?>/gi, "");
+        csvResults = csvResults.replace(/<\/?b>/g, "");
+        downloadBlob(csvResults, "Canonical_TBMs.csv", 'text/csv;charset=utf-8;');
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    const btnDownloadExtendedCsv = document.getElementById("btnDownloadExtendedCSV");
+    btnDownloadExtendedCsv.addEventListener("click", () => {
+        var csvResults = resultExtended.replace(/<br\s*\/?>/gi, "\n");
+        csvResults = csvResults.replace(/<b\s*\/?>/gi, "");
+        csvResults = csvResults.replace(/<\/?b>/g, "");
+        downloadBlob(csvResults, "Extended_TBMs.csv", 'text/csv;charset=utf-8;');
+    });
+});
+
+
 function extendedScoring(input){
-    const myJSON = '{"-2":{"P":0.0510192837,"G":0.187107438,"A":0.0246831956,"V":-0.1377410468,"L":-0.1377410468,"I":-0.1377410468,"M":-0.1377410468,"C":0.0126721763,"S":-0.1377410468,"T":-0.1377410468,"R":-0.1377410468,"K":-0.1377410468,"H":-0.1377410468,"D":-0.1377410468,"E":-0.1377410468,"N":-0.1377410468,"Q":-0.1377410468,"W":-0.1377410468,"F":-0.1377410468,"Y":-0.1377410468},"-1":{"P":-0.1377410468,"G":-0.1377410468,"A":-0.1377410468,"V":0.0190082645,"L":-0.1377410468,"I":0.0104683196,"M":-0.1377410468,"C":0.0099449036,"S":-0.1377410468,"T":-0.1377410468,"R":-0.1377410468,"K":-0.1377410468,"H":-0.1377410468,"D":0.1720661157,"E":0.0344077135,"N":-0.1377410468,"Q":0.0163085399,"W":-0.1377410468,"F":-0.1377410468,"Y":0.0132782369},"0":{"P":-0.1377410468,"G":0.2754820937,"A":-0.1377410468,"V":-0.1377410468,"L":-0.1377410468,"I":-0.1377410468,"M":-0.1377410468,"C":-0.1377410468,"S":-0.1377410468,"T":-0.1377410468,"R":-0.1377410468,"K":-0.1377410468,"H":-0.1377410468,"D":-0.1377410468,"E":-0.1377410468,"N":-0.1377410468,"Q":-0.1377410468,"W":-0.1377410468,"F":-0.1377410468,"Y":-0.1377410468},"1":{"P":-0.1377410468,"G":0.0087603306,"A":0.019862259,"V":0.0084022039,"L":0.005922865,"I":0.0110192837,"M":0.0143801653,"C":0.0298071625,"S":0.016446281,"T":0.0151239669,"R":0.008292011,"K":0.0084848485,"H":0.0133333333,"D":0.0224793388,"E":0.0324517906,"N":0.014600551,"Q":0.0210192837,"W":0.0081267218,"F":0.0093939394,"Y":0.0075482094},"2":{"P":0.012892562,"G":0.0087603306,"A":0.0185674931,"V":0.0103030303,"L":0.0070247934,"I":0.0080165289,"M":0.0092837466,"C":0.0132506887,"S":0.0132506887,"T":0.008292011,"R":0.0028099174,"K":0.0024793388,"H":0.0085950413,"D":0.0515702479,"E":0.0580165289,"N":0.0125344353,"Q":0.0071349862,"W":0.0050413223,"F":0.0074931129,"Y":0.0100826446}}'
-    const scoreSheet = JSON.parse(myJSON);
 
     var gIndex = 0;
 
@@ -269,14 +310,26 @@ function extendedScoring(input){
     while (offset < 3){
         const currentChar = input.charAt(gIndex + offset);
 
-        totalScore += scoreSheet[offset.toString()][currentChar];
-//        console.log(scoreSheet[offset.toString()][currentChar]);
+        totalScore += extendedScoringScoreSheet[offset.toString()][currentChar];
+//        console.log(extendedScoringScoreSheet[offset.toString()][currentChar]);
         offset += 1;
     }
 
+    totalScore  = totalScore.toFixed(5);
     return totalScore;
 }
 
+function downloadBlob(content, filename, contentType) {
+  // Create a blob
+  var blob = new Blob([content], { type: contentType });
+  var url = URL.createObjectURL(blob);
+
+  // Create a link to download it
+  var pom = document.createElement('a');
+  pom.href = url;
+  pom.setAttribute('download', filename);
+  pom.click();
+}
 
 // This code here served as good testing for a single protein extended scoring results.
 //var motifs = '';

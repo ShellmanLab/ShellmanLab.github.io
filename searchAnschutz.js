@@ -130,6 +130,9 @@ function findExtendedMotifs(uniprotProteinIDArray) {
 function clearText() {
   document.getElementById("canonical").innerHTML = '';
   document.getElementById("proteins").value = '';
+    // hide download button, if not hidden already
+  const btnContainer = document.getElementById("CSVButtonContainer");
+   btnContainer.style.display = "none";
 }
 
 // called when score button is pressed
@@ -174,19 +177,30 @@ function getScore(thisMotif){
 
   // score initialized to 0
   thisScore = 0;
+  motifLength = thisMotif.length;
 
-  // add score for each of the 8 characters
-  for (var i = 1; i < 9; i += 1) {
+  // add score for each of the characters (can be length 6, 7, 8)
+  for (var i = 1; i < motifLength+1; i += 1) {
     // Get char at current position
     currentChar = thisMotif.charAt(i-1);
     // calculate position score based off current position (i) and currentChar at position
     positionScore = canonicalScoringScoreSheet[i.toString()][currentChar];
     thisScore += positionScore;
-//    console.log(currentChar, positionScore, thisScore)
+    // console.log(currentChar, positionScore, thisScore)
   }
+    // Check the length of the motif, if it is 6, 7 re-normalize score
+    // Note: this is the case that a TBM is at the far C-terminal of a protein such that the #7 and/or #8 residue is not present
+    if (motifLength < 8) {
+        if(motifLength == 7){
+            thisScore = thisScore * 3.86 / 3.6485
+        }
+        else if(motifLength == 6){
+            thisScore = thisScore * 3.86 / 3.5307
+        }
+    }
 
 //  console.log(thisScore);
-   thisScore  = thisScore.toFixed(5);
+   thisScore  = thisScore.toFixed(3);
   return thisScore;
 }
 
@@ -315,7 +329,7 @@ function extendedScoring(input){
         offset += 1;
     }
 
-    totalScore  = totalScore.toFixed(5);
+    totalScore  = totalScore.toFixed(3);
     return totalScore;
 }
 

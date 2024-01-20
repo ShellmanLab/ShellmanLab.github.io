@@ -77,3 +77,14 @@
   .info-container:hover .info-bubble-2 {
     display: block;
   }
+
+
+    .button-container button {
+        background-color: #CFB87C;
+        color: black;
+        padding: 10px 20px; /* Add padding for better appearance */
+        margin: 5px; /* Add margin for spacing between buttons */
+        border: none; /* Remove button border */
+        border-radius: 5px;
+        cursor: pointer;
+    }
